@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智小象AI辅导员 - 学生端</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<!-- 页面内容区 -->
+<!-- 首页 -->
+<div class="page-container active" id="homePage">
+    <!-- 顶部新对话栏 -->
+    <div class="chat-top-bar">
+        <input type="text" class="new-chat-input" placeholder="新对话" readonly>
+    </div>
+
+    <!-- 核心内容区 - 改为聊天展示区 -->
+    <div class="chat-main-content">
+        <!-- 右上角头像与名称 -->
+        <div class="avatar-card">
+            <img src="https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/f5c6021033f8495fb60c95e93da5eab5.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&rcl=202604052202016AFAAD5BFE94CA1CC841&rrcfp=8a172a1a&x-expires=1776002528&x-signature=E8ER%2B16tEgEcMGyWDMi55cjxsec%3D" 
+                 class="avatar-img" 
+                 alt="智小象AI辅导员">
+            <div class="avatar-name">智小象AI辅导员</div>
+        </div>
+
+        <!-- 中间标题 -->
+        <h1 class="main-title" id="welcomeTitle">有什么我能帮你的吗？</h1>
+
+        <!-- 聊天消息展示区 -->
+        <div class="chat-messages" id="chatMessages">
+        </div>
+    </div>
+
+    <!-- 底部输入框区域 -->
+    <div class="chat-input-section">
+        <div class="input-wrapper">
+            <textarea id="homeChatInput" placeholder="发消息..." rows="1"></textarea>
+            <!-- 底部功能按钮栏 -->
+            <div class="input-toolbar">
+                <!-- 附件按钮 -->
+                <button class="tool-btn attachment-btn" title="附件">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/9f4a95a1125542a4885a9041c35f0ec2.png~tplv-a9rns2rl98-image.png?lk3s=8e244e95&rcl=20260406222055915A5AB59B28EEE9F360&rrcfp=dafada99&x-expires=2091709255&x-signature=oMxfq48OZygpc6h3hRxsrjf6mCg%3D" 
+                         class="attachment-icon" 
+                         alt="附件">
+                </button>
+                <!-- 附件展开面板 -->
+                <div class="popup-panel attachment-panel" id="attachmentPanel">
+                    <button class="attachment-item" onclick="selectFile('image')">🖼️ 图片</button>
+                    <button class="attachment-item" onclick="selectFile('document')">📄 文件</button>
+                    <button class="attachment-item" onclick="selectFile('video')">🎬 视频</button>
+                    <button class="attachment-item" onclick="selectFile('audio')">🎵 音频</button>
+                </div>
+                
+                <!-- 专家模式按钮 -->
+                <button class="tool-btn expert-btn active">🔹 专家</button>
+                <!-- 专家模式展开面板 -->
+                <div class="popup-panel expert-panel" id="expertPanel">
+                    <button class="expert-option" data-mode="fast">快速</button>
+                    <button class="expert-option" data-mode="think">思考</button>
+                    <button class="expert-option active" data-mode="expert">专家</button>
+                </div>
+                
+                <button class="tool-btn">✍️ 帮我写作</button>
+                <button class="tool-btn">🖼️ 图像生成</button>
+                <button class="tool-btn">🌐 翻译</button>
+                <button class="tool-btn">📋 服务大厅</button>
+                <button class="tool-btn">🏫 掌上大学</button>
+                
+                <!-- 更多按钮 -->
+                <button class="tool-btn more-btn">⚙️ 更多</button>
+                <!-- 更多功能展开面板 -->
+                <div class="popup-panel more-panel" id="morePanel">
+                    <button class="more-item">
+                        <span class="icon">📢</span>
+                        <span>深入研究</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">🔊</span>
+                        <span>AI 播客</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">🔴</span>
+                        <span>记录会议</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">🎵</span>
+                        <span>音乐生成</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">✅</span>
+                        <span>解题答疑</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">📊</span>
+                        <span>数据分析</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">🪐</span>
+                        <span>超能模式</span>
+                    </button>
+                    <button class="more-item">
+                        <span class="icon">📑</span>
+                        <span>PPT 生成</span>
+                    </button>
+                </div>
+                
+                <button class="voice-btn" title="语音输入">🎤</button>
+                
+                <!-- 发送按钮 -->
+                <button class="send-btn" onclick="sendHomeChat()">发送</button>
+                
+                <!-- 隐藏的文件选择器 -->
+                <input type="file" id="fileInput" accept="*" onchange="handleFileSelect(event)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 服务大厅 -->
+<div class="page-container" id="servicePage">
+    <div class="service-hall">
+        <input type="text" class="service-search" placeholder="搜索服务..." onfocus="showToast('搜索框已激活')">
+        <div class="service-grid">
+            <div class="service-item" onclick="showToast('已进入学习服务页面')">
+                <div class="service-icon">📚</div>
+                <div class="service-name">学习服务</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入生活服务页面')">
+                <div class="service-icon">🏠</div>
+                <div class="service-name">生活服务</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入心理支持页面')">
+                <div class="service-icon">💚</div>
+                <div class="service-name">心理支持</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入就业指导页面')">
+                <div class="service-icon">💼</div>
+                <div class="service-name">就业指导</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入资助管理页面')">
+                <div class="service-icon">💰</div>
+                <div class="service-name">资助管理</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入社团活动页面')">
+                <div class="service-icon">🎯</div>
+                <div class="service-name">社团活动</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入教务通知页面')">
+                <div class="service-icon">📢</div>
+                <div class="service-name">教务通知</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入图书借阅页面')">
+                <div class="service-icon">📖</div>
+                <div class="service-name">图书借阅</div>
+            </div>
+            <div class="service-item" onclick="showToast('已进入校园一卡通页面')">
+                <div class="service-icon">💳</div>
+                <div class="service-name">校园一卡通</div>
+            </div>
+        </div>
+        <div class="service-history">
+            <div class="service-history-title">历史服务记录</div>
+            <div class="history-item" onclick="showToast('查看宿舍报修详情')">
+                <span>宿舍报修</span>
+                <span style="color:#059669">已完成</span>
+            </div>
+            <div class="history-item" onclick="showToast('查看请假申请详情')">
+                <span>请假申请</span>
+                <span style="color:#059669">已审批</span>
+            </div>
+            <div class="history-item" onclick="showToast('查看心理咨询预约进度')">
+                <span>心理咨询预约</span>
+                <span style="color:#f59e0b">待确认</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 我的成长 -->
+<div class="page-container" id="growthPage">
+    <div class="my-growth">
+        <div class="student-portrait" onclick="showToast('查看学生画像详细分析报告')">
+            <div class="portrait-title">学生画像（五维雷达图）</div>
+            <div class="radar-chart">雷达图展示区域（学业/综合素质/心理/社会实践/思政）</div>
+        </div>
+        <div class="growth-track">
+            <div class="portrait-title">成长轨迹</div>
+            <div class="track-item" onclick="showToast('查看第二课堂积分明细')">
+                <span class="track-name">第二课堂积分</span>
+                <span class="track-value">86分</span>
+            </div>
+            <div class="track-item" onclick="showToast('查看荣誉奖项详情')">
+                <span class="track-name">荣誉奖项</span>
+                <span class="track-value">3项</span>
+            </div>
+            <div class="track-item" onclick="showToast('查看志愿服务时长记录')">
+                <span class="track-name">志愿服务时长</span>
+                <span class="track-value">48小时</span>
+            </div>
+        </div>
+        <div class="todo-list">
+            <div class="portrait-title">待办事项</div>
+            <div class="todo-item" onclick="showToast('查看未读班级通知')">
+                <div class="todo-dot"></div>
+                <div class="todo-text">未读班级通知（2条）</div>
+            </div>
+            <div class="todo-item" onclick="showToast('去提交社会实践心得')">
+                <div class="todo-dot"></div>
+                <div class="todo-text">未完成社会实践心得提交</div>
+            </div>
+            <div class="todo-item" onclick="showToast('查看请假申请审批进度')">
+                <div class="todo-dot"></div>
+                <div class="todo-text">待审批请假申请</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 社区 -->
+<div class="page-container" id="communityPage">
+    <div class="community">
+        <div class="ideology-content">
+            <div class="ideology-title">思政教育内容</div>
+            <div class="ideology-item" onclick="showToast('播放沉浸式微党课视频')">
+                <div class="ideology-cover"></div>
+                <div class="ideology-info">
+                    <div class="ideology-name">"沉浸式"微党课视频</div>
+                    <div class="ideology-desc">学习党的创新理论，传承红色基因</div>
+                </div>
+            </div>
+            <div class="ideology-item" onclick="showToast('播放红色故事音频')">
+                <div class="ideology-cover"></div>
+                <div class="ideology-info">
+                    <div class="ideology-name">红色故事音频</div>
+                    <div class="ideology-desc">聆听革命先辈事迹，感悟初心使命</div>
+                </div>
+            </div>
+        </div>
+        <div class="hot-topic">
+            <div class="ideology-title">热门话题讨论</div>
+            <div class="topic-item" onclick="showToast('进入话题：如何平衡学业与社团活动？')">
+                如何平衡学业与社团活动？
+            </div>
+            <div class="topic-item" onclick="showToast('进入话题：大学生就业形势分析')">
+                大学生就业形势分析
+            </div>
+            <div class="topic-item" onclick="showToast('进入话题：校园反诈知识科普')">
+                校园反诈知识科普
+            </div>
+        </div>
+        <div class="activity-entry" id="activityEntry">
+            <div class="ideology-title">主题活动报名</div>
+            <div class="ideology-item" style="border-bottom: none;">
+                <div class="ideology-info">
+                    <div class="ideology-name">"青春向党"主题演讲比赛</div>
+                    <div class="ideology-desc">报名截止时间：2026-04-10 | 活动时间：2026-04-20</div>
+                </div>
+            </div>
+            <button class="activity-btn" id="activityBtn">立即报名</button>
+        </div>
+    </div>
+</div>
+
+<!-- 底部导航栏 -->
+<div class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('homePage', this)">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-name">首页</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('servicePage', this)">
+        <div class="tab-icon">📋</div>
+        <div class="tab-name">服务大厅</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('growthPage', this)">
+        <div class="tab-icon">📈</div>
+        <div class="tab-name">我的成长</div>
+    </div>
+    <div class="tab-item" onclick="switchTab('communityPage', this)">
+        <div class="tab-icon">🌐</div>
+        <div class="tab-name">社区</div>
+    </div>
+</div>
+
+<!-- 提示框 -->
+<div id="toast"></div>
+
+<script>
+// 智能回答库
+const answerMap = [
+    { keywords: ["你好", "嗨", "哈喽"], answer: "你好呀！我是智小象，很高兴为你服务😊" },
+    { keywords: ["在吗", "在不在"], answer: "我在呢！有什么可以帮你的吗？" },
+    { keywords: ["谢谢", "感谢"], answer: "不客气～能帮到你就好！" },
+    { keywords: ["再见", "拜拜"], answer: "再见！有问题随时来找我哦～" },
+    { keywords: ["早上好"], answer: "早上好！今天有早八课吗？记得吃早餐哦🥪" },
+    { keywords: ["晚上好"], answer: "晚上好！一天辛苦啦，早点休息哦🌙" },
+    
+    { keywords: ["奖学金"], answer: "奖学金一般分为国家奖学金、校级奖学金、社会奖学金等。申请条件通常包括成绩排名、综测分数、无挂科、品德良好等，每年9-10月申请。" },
+    { keywords: ["助学金"], answer: "助学金用于帮助家庭经济困难学生，需要提供贫困认定材料，申请时间一般每学年秋季学期，审核通过后按月发放。" },
+    { keywords: ["请假"], answer: "请假流程：1.在校园系统提交申请 2.选择请假类型 3.填写时间和原因 4.辅导员审批 5.审批通过即可。" },
+    { keywords: ["挂科"], answer: "挂科后会安排补考，补考时间一般在下学期前两周，补考仍不过需要重修，重修需要缴费并跟下一届上课。" },
+    { keywords: ["重修"], answer: "重修流程：1.登录教务系统 2.选择重修课程 3.缴费 4.按课表上课 5.参加考试。" },
+    { keywords: ["转专业"], answer: "转专业一般在大一下学期申请，要求成绩无挂科、通过笔试面试、接收学院同意即可。" },
+    { keywords: ["宿舍报修"], answer: "宿舍报修可以在校园服务小程序提交，选择水电/家具/网络问题，填写宿舍号，后勤会在24小时内处理。" },
+    { keywords: ["晚自习"], answer: "晚自习一般19:00-21:00，部分院系要求签到，缺勤会影响综测分数。" },
+    { keywords: ["四六级"], answer: "英语四六级每年考2次，6月和12月，提前3个月报名，必须在校学生才能报考。" },
+    { keywords: ["考研"], answer: "考研时间一般在12月，流程包括报名、现场确认、初试、复试、录取，大三下开始准备最合适。" },
+    { keywords: ["毕业"], answer: "毕业需要修满学分、通过毕业论文、无挂科、完成实习、通过答辩，满足所有要求才能拿到毕业证和学位证。" },
+    { keywords: ["心理", "心理健康"], answer: "学校有心理咨询中心，提供免费一对一咨询，也可以随时找我倾诉哦～" },
+    { keywords: ["一卡通"], answer: "校园一卡通可用于食堂消费、图书馆借阅、门禁通行，充值可在校园圈存机或线上小程序操作，丢失可到一卡通中心补办。" },
+];
+
+// 切换底部Tab
+function switchTab(pageId, tabEl) {
+    document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+}
+
+// 输入框自动调整高度
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+}
+
+// 首页输入框事件
+const homeChatInput = document.getElementById('homeChatInput');
+homeChatInput.addEventListener('input', function() {
+    autoResizeTextarea(this);
+});
+homeChatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendHomeChat();
+    }
+});
+
+// 添加聊天消息到首页
+function addChatMessage(text, role) {
+    const chatMessages = document.getElementById('chatMessages');
+    const welcomeTitle = document.getElementById('welcomeTitle');
+    
+    // 隐藏欢迎标题（有用户消息后才隐藏）
+    if (welcomeTitle && role === 'student') {
+        welcomeTitle.style.display = 'none';
+    }
+    
+    const div = document.createElement('div');
+    div.className = 'message ' + role;
+    
+    if (role === 'ai') {
+        const avatarImg = document.createElement('img');
+        avatarImg.src = 'https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/f5c6021033f8495fb60c95e93da5eab5.jpg~tplv-a9rns2rl98-24:720:720.jpg?lk3s=8e244e95&rcl=202604052202016AFAAD5BFE94CA1CC841&rrcfp=8a172a1a&x-expires=1776002528&x-signature=E8ER%2B16tEgEcMGyWDMi55cjxsec%3D';
+        avatarImg.className = 'message-ai-avatar';
+        avatarImg.alt = '智小象头像';
+        
+        const textNode = document.createTextNode(text);
+        div.appendChild(avatarImg);
+        div.appendChild(textNode);
+    } else {
+        div.textContent = text;
+    }
+    
+    chatMessages.appendChild(div);
+    
+    // 滚动到底部
+    const chatMainContent = document.querySelector('.chat-main-content');
+    chatMainContent.scrollTop = chatMainContent.scrollHeight;
+}
+
+// 首页发送消息
+function sendHomeChat() {
+    const text = homeChatInput.value.trim();
+    if (!text) return;
+
+    // 添加用户消息
+    addChatMessage(text, 'student');
+    homeChatInput.value = '';
+    autoResizeTextarea(homeChatInput);
+
+    // AI回复
+    setTimeout(() => {
+        let answer = "你好，我不太懂你的意思，你可以换个方式问我哦~";
+
+        for (let item of answerMap) {
+            for (let kw of item.keywords) {
+                if (text.toLowerCase().includes(kw)) {
+                    answer = item.answer;
+                    addChatMessage(answer, 'ai');
+                    return;
+                }
+            }
+        }
+
+        addChatMessage(answer, 'ai');
+    }, 700);
+}
+
+// 提示框功能
+function showToast(text) {
+    const toast = document.getElementById('toast');
+    if (toast.timer) clearTimeout(toast.timer);
+    
+    toast.textContent = text;
+    toast.style.display = 'block';
+    
+    toast.timer = setTimeout(() => {
+        toast.style.display = 'none';
+    }, 2000);
+}
+
+// ===================== 核心：展开面板控制逻辑 =====================
+// 关闭所有面板
+function closeAllPanels() {
+    document.querySelectorAll('.popup-panel').forEach(panel => {
+        panel.classList.remove('show');
+    });
+}
+
+// 1. 附件按钮展开/收起
+function initAttachmentBtn() {
+    const attachmentBtn = document.querySelector('.attachment-btn');
+    const attachmentPanel = document.getElementById('attachmentPanel');
+    
+    attachmentBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isShow = attachmentPanel.classList.contains('show');
+        closeAllPanels();
+        if (!isShow) {
+            attachmentPanel.classList.add('show');
+        }
+    });
+}
+
+// 2. 专家模式按钮展开/收起 + 模式切换
+function initExpertBtn() {
+    const expertBtn = document.querySelector('.expert-btn');
+    const expertPanel = document.getElementById('expertPanel');
+    const expertOptions = document.querySelectorAll('.expert-option');
+    
+    // 展开/收起
+    expertBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isShow = expertPanel.classList.contains('show');
+        closeAllPanels();
+        if (!isShow) {
+            expertPanel.classList.add('show');
+        }
+    });
+
+    // 模式切换
+    expertOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // 更新选中状态
+            expertOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            // 更新按钮文字
+            const mode = this.dataset.mode;
+            expertBtn.innerHTML = `🔹 ${this.textContent}`;
+            expertBtn.classList.add('active');
+            // 收起面板
+            closeAllPanels();
+            showToast(`已切换到「${this.textContent}」模式`);
+        });
+    });
+}
+
+// 3. 更多按钮展开/收起
+function initMoreBtn() {
+    const moreBtn = document.querySelector('.more-btn');
+    const morePanel = document.getElementById('morePanel');
+    const moreItems = document.querySelectorAll('.more-item');
+    
+    // 展开/收起
+    moreBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isShow = morePanel.classList.contains('show');
+        closeAllPanels();
+        if (!isShow) {
+            morePanel.classList.add('show');
+        }
+    });
+
+    // 更多功能项点击
+    moreItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const funcName = this.querySelector('span:last-child').textContent;
+            showToast(`已打开「${funcName}」功能`);
+            closeAllPanels();
+        });
+    });
+}
+
+// 文件选择功能
+function selectFile(type) {
+    const fileInput = document.getElementById('fileInput');
+    
+    // 设置文件类型过滤
+    switch(type) {
+        case 'image':
+            fileInput.accept = 'image/*';
+            break;
+        case 'document':
+            fileInput.accept = '.doc,.docx,.pdf,.txt,.xls,.xlsx';
+            break;
+        case 'video':
+            fileInput.accept = 'video/*';
+            break;
+        case 'audio':
+            fileInput.accept = 'audio/*';
+            break;
+        default:
+            fileInput.accept = '*';
+    }
+    
+    // 触发文件选择对话框
+    fileInput.click();
+    closeAllPanels();
+}
+
+// 处理文件选择
+function handleFileSelect(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        const fileName = files[0].name;
+        showToast(`已选择文件：${fileName}`);
+        // 清空文件选择器
+        event.target.value = '';
+    }
+}
+
+// 页面加载完成初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化所有展开按钮
+    initAttachmentBtn();
+    initExpertBtn();
+    initMoreBtn();
+
+    // 点击页面空白处关闭所有面板
+    document.addEventListener('click', closeAllPanels);
+
+    // 点击面板内部不关闭
+    document.querySelectorAll('.popup-panel').forEach(panel => {
+        panel.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+
+    // 普通工具按钮点击事件
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+        if (!btn.classList.contains('attachment-btn') && !btn.classList.contains('expert-btn') && !btn.classList.contains('more-btn')) {
+            btn.addEventListener('click', function() {
+                closeAllPanels();
+                if (!this.classList.contains('active')) {
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    showToast(`已切换到「${this.innerText.trim()}」模式`);
+                }
+            });
+        }
+    });
+
+    // 主题活动报名点击事件
+    const activityEntry = document.getElementById('activityEntry');
+    activityEntry.addEventListener('click', function() {
+        showToast('进入"青春向党"主题演讲比赛报名详情页');
+    });
+    
+    const activityBtn = document.getElementById('activityBtn');
+    activityBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showToast('"青春向党"主题演讲比赛报名成功！');
+    });
+});
+</script>
+<script src="/static/app.js"></script>
+</body>
+</html>
